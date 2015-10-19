@@ -13,7 +13,7 @@ ifeq ($(strip $(SWITCH_CHIP)),rtl8366sr)
 SWITCH_CHIP_OBJS = ../common/rtl8366sr/rtl_phy.o ../common/rtl8366sr/smi.o ../common/rtl8366sr/rtl8366s_api_compat.o
 endif
 
-OBJS	= $(BOARD).o flash.o ../common/ar7100_flash.o $(SWITCH_CHIP_OBJS)
+OBJS	= $(BOARD).o ../common/ar7100_flash.o $(SWITCH_CHIP_OBJS)
 
 SOBJS	= ../common/lowlevel_init_ar9100.o
 

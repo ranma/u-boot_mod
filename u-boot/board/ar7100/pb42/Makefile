@@ -2,7 +2,7 @@ include $(TOPDIR)/config.mk
 
 LIB	= lib$(BOARD).a
 
-OBJS	= $(BOARD).o flash.o ../common/ar7100_flash.o
+OBJS	= $(BOARD).o ../common/ar7100_flash.o
 SOBJS	= ../common/lowlevel_init.o
 
 $(LIB):	.depend $(OBJS) $(SOBJS)
