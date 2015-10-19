@@ -321,6 +321,40 @@ hornet_common_config : common_config
 	@echo "#define CONFIG_MACH_HORNET                   1" >> include/config.h
 	@echo "#define CONFIG_HORNET_1_1_WAR                1" >> include/config.h
 
+tb225_config		: 	unconfig
+	@ >include/config.h
+	@echo "#define CONFIG_AR7100 1" >>include/config.h
+	@./mkconfig -a tb225 mips mips tb225 ar7100 ar7100
+
+pb42_config		: 	unconfig
+	@ >include/config.h
+	@echo "#define CONFIG_AR7100 1" >>include/config.h
+	@./mkconfig -a pb42 mips mips pb42 ar7100 ar7100
+
+tb243_config		: 	unconfig
+	@ >include/config.h
+	@echo "#define CONFIG_AR7100 1" >>include/config.h
+	@echo "#define CONFIG_AR9100 1" >>include/config.h
+	@./mkconfig -a tb243 mips mips tb243 ar7100 ar7100
+
+ap83_config		: 	unconfig
+	@ >include/config.h
+	@echo "#define CONFIG_AR7100 1" >>include/config.h
+	@echo "#define CONFIG_AR9100 1" >>include/config.h
+	@./mkconfig -a ap83 mips mips ap83 ar7100 ar7100
+
+ap81_config		: 	unconfig
+	@ >include/config.h
+	@echo "#define CONFIG_AR7100 1" >>include/config.h
+	@echo "#define CONFIG_AR9100 1" >>include/config.h
+	@./mkconfig -a ap81 mips mips ap81 ar7100 ar7100
+
+cus97_config		: 	unconfig
+	@ >include/config.h
+	@echo "#define CONFIG_AR7100 1" >>include/config.h
+	@echo "#define CONFIG_AR9100 1" >>include/config.h
+	@./mkconfig -a cus97 mips mips cus97 ar7100 ar7100
+
 wr703n_config : unconfig hornet_common_config
 	@/bin/echo -e '\e[32m> Configuring for TP-Link TL-WR703N at:' `date` '\e[0m'
 	@echo "#define CONFIG_FOR_TPLINK_WR703N_V1          1" >> include/config.h
