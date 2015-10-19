@@ -43,7 +43,7 @@
 #define	CFG_PBSIZE (CFG_CBSIZE+sizeof(CFG_PROMPT)+16)  /* Print Buffer Size */
 #define	CFG_MAXARGS		16		/* max number of command args*/
 
-#define CFG_MALLOC_LEN		128*1024
+#define CFG_MALLOC_LEN		512*1024
 
 #define CFG_BOOTPARAMS_LEN	128*1024
 
