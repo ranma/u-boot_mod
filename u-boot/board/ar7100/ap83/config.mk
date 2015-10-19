@@ -1,5 +1,13 @@
 # ROM version
-TEXT_BASE = 0xbf000000
-
-# SDRAM version
-#TEXT_BASE = 0xa1000000
+ifdef COMPRESSED_UBOOT
+	TEXT_BASE = 0x80010000
+	BOOTSTRAP_TEXT_BASE = 0xBF000000
+# RAM version
+else
+	ifdef CONFIG_SKIP_LOWLEVEL_INIT
+		TEXT_BASE = 0x80100000
+	else
+		# Uncompressed ROM version
+		TEXT_BASE = 0xBF000000
+	endif
+endif

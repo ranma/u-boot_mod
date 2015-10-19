@@ -321,39 +321,63 @@ hornet_common_config : common_config
 	@echo "#define CONFIG_MACH_HORNET                   1" >> include/config.h
 	@echo "#define CONFIG_HORNET_1_1_WAR                1" >> include/config.h
 
-tb225_config		: 	unconfig
-	@ >include/config.h
+ar7100_common_config:	common_config
 	@echo "#define CONFIG_AR7100 1" >>include/config.h
+
+ar9100_common_config:	common_config
+	@echo "#define CONFIG_AR7100 1" >>include/config.h
+	@echo "#define CONFIG_AR9100 1" >>include/config.h
+
+tb225_config:	unconfig ar7100_common_config
+	@echo "#define DEFAULT_FLASH_SIZE_IN_MB             4" >> include/config.h
+	@echo "#define BOARD_CUSTOM_STRING                  \"TB225 (AR7100) U-Boot\"" >> include/config.h
 	@./mkconfig -a tb225 mips mips tb225 ar7100 ar7100
 
-pb42_config		: 	unconfig
-	@ >include/config.h
-	@echo "#define CONFIG_AR7100 1" >>include/config.h
+pb42_config:	unconfig ar7100_common_config
+	@echo "#define DEFAULT_FLASH_SIZE_IN_MB             4" >> include/config.h
+	@echo "#define BOARD_CUSTOM_STRING                  \"PB42 (AR7100) U-Boot\"" >> include/config.h
 	@./mkconfig -a pb42 mips mips pb42 ar7100 ar7100
 
-tb243_config		: 	unconfig
-	@ >include/config.h
-	@echo "#define CONFIG_AR7100 1" >>include/config.h
-	@echo "#define CONFIG_AR9100 1" >>include/config.h
+tb243_config:	unconfig ar9100_common_config
+	@echo "#define DEFAULT_FLASH_SIZE_IN_MB             4" >> include/config.h
+	@echo "#define BOARD_CUSTOM_STRING                  \"TB243 (AR9100) U-Boot\"" >> include/config.h
 	@./mkconfig -a tb243 mips mips tb243 ar7100 ar7100
 
-ap83_config		: 	unconfig
-	@ >include/config.h
-	@echo "#define CONFIG_AR7100 1" >>include/config.h
-	@echo "#define CONFIG_AR9100 1" >>include/config.h
+ap83_config:	unconfig ar9100_common_config
+	@echo "#define DEFAULT_FLASH_SIZE_IN_MB             4" >> include/config.h
+	@echo "#define BOARD_CUSTOM_STRING                  \"AP83 (AR9100) U-Boot\"" >> include/config.h
 	@./mkconfig -a ap83 mips mips ap83 ar7100 ar7100
 
-ap81_config		: 	unconfig
-	@ >include/config.h
-	@echo "#define CONFIG_AR7100 1" >>include/config.h
-	@echo "#define CONFIG_AR9100 1" >>include/config.h
+ap81_config:	unconfig ar9100_common_config
+	@echo "#define DEFAULT_FLASH_SIZE_IN_MB             4" >> include/config.h
+	@echo "#define BOARD_CUSTOM_STRING                  \"AP81 (AR9100) U-Boot\"" >> include/config.h
 	@./mkconfig -a ap81 mips mips ap81 ar7100 ar7100
 
-cus97_config		: 	unconfig
-	@ >include/config.h
-	@echo "#define CONFIG_AR7100 1" >>include/config.h
-	@echo "#define CONFIG_AR9100 1" >>include/config.h
+cus97_config:	unconfig ar9100_common_config
+	@echo "#define DEFAULT_FLASH_SIZE_IN_MB             4" >> include/config.h
+	@echo "#define BOARD_CUSTOM_STRING                  \"CUS97 (AR9100) U-Boot\"" >> include/config.h
 	@./mkconfig -a cus97 mips mips cus97 ar7100 ar7100
+
+wr1043nd_config : unconfig ar9100_common_config
+	@/bin/echo -e '\e[32m> Configuring for TP-Link TL-WR1043ND at:' `date` '\e[0m'
+	@echo "#define CONFIG_FOR_TPLINK_WR1043ND           1" >> include/config.h
+	# Compressed doesn't compile yet.
+	@echo "#undef COMPRESSED_UBOOT"                        >> include/config.h
+	@echo "#define GPIO_SYS_LED_BIT                     2" >> include/config.h
+	@echo "#define GPIO_SYS_LED_ON                      0" >> include/config.h
+	@echo "#define GPIO_WLAN_LED_BIT                    9" >> include/config.h
+	@echo "#define GPIO_WLAN_LED_ON                     0" >> include/config.h
+	@echo "#define GPIO_USB_LED_BIT                     1" >> include/config.h
+	@echo "#define GPIO_USB_LED_ON                      0" >> include/config.h
+	@echo "#define GPIO_QSS_LED_BIT                     5" >> include/config.h
+	@echo "#define GPIO_QSS_LED_ON                      1" >> include/config.h
+	# we will use QSS button instead of reset
+	@echo "#define GPIO_RST_BUTTON_BIT                  7" >> include/config.h
+	@echo "#define GPIO_RST_BUTTON_IS_ACTIVE_LOW        1" >> include/config.h
+	@echo "#define DEFAULT_FLASH_SIZE_IN_MB             8" >> include/config.h
+	@echo "#define BOARD_CUSTOM_STRING                  \"AP83 (AR9132) U-Boot for TL-WR1043ND\"" >> include/config.h
+
+	@./mkconfig -a ap83 mips mips ap83 ar7100 ar7100
 
 wr703n_config : unconfig hornet_common_config
 	@/bin/echo -e '\e[32m> Configuring for TP-Link TL-WR703N at:' `date` '\e[0m'

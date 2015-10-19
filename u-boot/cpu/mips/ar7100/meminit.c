@@ -53,6 +53,10 @@
 #include <asm/addrspace.h>
 #include "ar7100_soc.h"
 
+#ifdef COMPRESSED_UBOOT
+#define printf(x, ...)
+#endif
+
 
 uint8_t     tap_settings[] = 
             {0x40, 0x41, 0x10, 0x12, 0x13, 0x15, 0x1a, 0x1c, 0x1f, 0x2f, 0x3f};

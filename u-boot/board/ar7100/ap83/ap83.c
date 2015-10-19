@@ -6,6 +6,90 @@
 #include <version.h>
 #include "ar7100_soc.h"
 
+static unsigned int all_led_mask(void)
+{
+	unsigned int mask = 0;
+#ifdef GPIO_SYS_LED_BIT
+	mask |= 1 << GPIO_SYS_LED_BIT;
+#endif
+#ifdef GPIO_USB_LED_BIT
+	mask |= 1 << GPIO_USB_LED_BIT;
+#endif
+#ifdef GPIO_WLAN_LED_BIT
+	mask |= 1 << GPIO_WLAN_LED_BIT;
+#endif
+#ifdef GPIO_QSS_LED_BIT
+	mask |= 1 << GPIO_QSS_LED_BIT;
+#endif
+	return mask;
+}
+
+static unsigned int all_led_value(int on)
+{
+	unsigned int value = 0;
+#ifdef GPIO_SYS_LED_BIT
+	value |= GPIO_SYS_LED_ON << GPIO_SYS_LED_BIT;
+#endif
+#ifdef GPIO_USB_LED_BIT
+	value |= GPIO_USB_LED_ON << GPIO_USB_LED_BIT;
+#endif
+#ifdef GPIO_WLAN_LED_BIT
+	value |= GPIO_WLAN_LED_ON << GPIO_WLAN_LED_BIT;
+#endif
+#ifdef GPIO_QSS_LED_BIT
+	value |= GPIO_QSS_LED_ON << GPIO_QSS_LED_BIT;
+#endif
+	if (!on) {
+		value ^= all_led_mask();
+	}
+	return value;
+}
+
+void led_toggle(void){
+	unsigned int gpio;
+
+	gpio = ar7100_reg_rd(AR7100_GPIO_OUT);
+	gpio ^= all_led_mask();
+	ar7100_reg_wr(AR7100_GPIO_OUT, gpio);
+}
+
+void all_led_on(void){
+	unsigned int gpio;
+
+	gpio = ar7100_reg_rd(AR7100_GPIO_OUT);
+	gpio &= ~all_led_mask();
+	gpio |= all_led_value(1);
+	ar7100_reg_wr(AR7100_GPIO_OUT, gpio);
+}
+
+void all_led_off(void){
+	unsigned int gpio;
+
+	gpio = ar7100_reg_rd(AR7100_GPIO_OUT);
+	gpio &= ~all_led_mask();
+	gpio |= all_led_value(0);
+	ar7100_reg_wr(AR7100_GPIO_OUT, gpio);
+}
+
+void gpio_config(void) {
+	ar7100_reg_wr(AR7100_GPIO_OE, (ar7100_reg_rd(AR7100_GPIO_OE) | all_led_mask()));
+	all_led_off();
+}
+
+#ifndef GPIO_RST_BUTTON_BIT
+	#error "GPIO_RST_BUTTON_BIT not defined!"
+#endif
+int reset_button_status(void){
+	unsigned int gpio;
+
+	gpio = ar7100_reg_rd(AR7100_GPIO_IN);
+
+#if defined(GPIO_RST_BUTTON_IS_ACTIVE_LOW)
+	return !(gpio & (1 << GPIO_RST_BUTTON_BIT));
+#else
+	return !!(gpio & (1 << GPIO_RST_BUTTON_BIT));
+#endif
+}
 
 void
 ar7100_usb_initial_config(void)
@@ -133,14 +217,27 @@ ar7100_mem_config()
     return (ar7100_ddr_find_size());
 }
 
-long int initdram(int board_type)
+long int initdram(void)
 {
+    gpio_config();
+#ifndef CONFIG_SKIP_LOWLEVEL_INIT
     return (ar7100_mem_config());
+#else
+    return (ar7100_ddr_find_size());
+#endif
 }
 
-int checkboard (void)
-{
+#ifndef COMPRESSED_UBOOT
+int checkboard (void) {
+	printf(BOARD_CUSTOM_STRING"\n\n");
+	return 0;
+}
+#endif
 
-    printf("AP83 (ar9100) U-boot " ATH_AP83_UBOOT_VERSION "\n");
-    return 0;
+/*
+ * Returns a string with memory type preceded by a space sign
+ */
+const char* print_mem_type(void){
+	/* TODO */
+	return "";
 }
