@@ -36,15 +36,15 @@
 #endif
 
 int do_reset(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]){
+#ifndef COMPRESSED_UBOOT
+	fprintf(stdout, "\nResetting the board...\n");
+	milisecdelay(500);
+#endif  /* #ifndef COMPRESSED_UBOOT */
 #if defined(CONFIG_AR7100)
 	for(;;){
 		ar7100_reg_wr(AR7100_RESET, (AR7100_RESET_FULL_CHIP | AR7100_RESET_DDR));
 	}
 #elif defined(CONFIG_AR7240)
-#ifndef COMPRESSED_UBOOT
-	fprintf(stdout, "\nResetting the board...\n");
-	milisecdelay(500);
-#endif  /* #ifndef COMPRESSED_UBOOT */
 	for(;;){
 	#ifdef CONFIG_WASP
 		if(ar7240_reg_rd(AR7240_REV_ID) & 0xf){

@@ -75,6 +75,12 @@
 
 #define CFG_RX_ETH_BUFFER   16
 
+#if defined(CONFIG_SILENT_CONSOLE)
+	#define SILENT_ENV_VARIABLE	"silent=1\0"
+#else
+	#define SILENT_ENV_VARIABLE	""
+#endif
+
 /*
 ** PLL Config for different CPU/DDR/AHB frequencies
 */

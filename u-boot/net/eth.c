@@ -27,6 +27,7 @@
 #include <miiphy.h>
 
 #if (CONFIG_COMMANDS & CFG_CMD_NET) && defined(CONFIG_NET_MULTI)
+extern int ag7100_enet_initialize(bd_t * bis);
 extern int ag7240_enet_initialize(bd_t * bis);
 
 /*
@@ -119,8 +120,12 @@ int eth_initialize(bd_t *bis){
 	miiphy_init();
 #endif
 
+#if defined(CONFIG_AR7100)
+	ag7100_enet_initialize(bis);
+#else
 	// ag7240 initialization
 	ag7240_enet_initialize(bis);
+#endif
 
 	if(!eth_devices){
 		puts("## Error: no ethernet found\n");
