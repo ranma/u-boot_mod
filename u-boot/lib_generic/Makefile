@@ -25,9 +25,15 @@ include $(TOPDIR)/config.mk
 
 LIB	= libgeneric.a
 
-OBJS    = crc32.o ctype.o display_options.o ldiv.o string.o vsprintf.o LzmaWrapper.o LzmaDecode.o
+OBJS    = crc32.o ctype.o display_options.o ldiv.o string.o vsprintf.o
+
+ifdef CONFIG_GZIP
+OBJS   += tinflate.o tinfgzip.o
+else
+OBJS   += LzmaWrapper.o LzmaDecode.o
 
 CFLAGS += -DCONFIG_LZMA=1
+endif
 
 $(LIB):	.depend $(OBJS)
 	$(AR) crv $@ $(OBJS)

@@ -114,7 +114,12 @@ int tinf_gzip_uncompress(void *dest, unsigned int *destLen,
 
     if (res != TINF_OK) return TINF_DATA_ERROR;
 
+    /* Modified: The decompressed size may be smaller than expected,
+     * for example when the OpenWRT decompressor stub is used.
+
     if (*destLen != dlen) return TINF_DATA_ERROR;
+
+     */
 
     /* -- check CRC32 checksum -- */
 

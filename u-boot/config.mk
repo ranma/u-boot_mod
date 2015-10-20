@@ -28,6 +28,11 @@ PLATFORM_RELFLAGS =
 PLATFORM_CPPFLAGS =
 PLATFORM_LDFLAGS =
 
+ifeq ($(TOPDIR)/include/config.mk,$(wildcard $(TOPDIR)/include/config.mk))
+# load additional config defines
+include $(TOPDIR)/include/config.mk
+endif
+
 #
 # When cross-compiling on NetBSD, we have to define __PPC__ or else we
 # will pick up a va_list declaration that is incompatible with the

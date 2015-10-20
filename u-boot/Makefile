@@ -376,8 +376,10 @@ wr1043nd_config : unconfig ar9100_common_config
 	@echo "#define GPIO_RST_BUTTON_IS_ACTIVE_LOW        1" >> include/config.h
 	@echo "#define DEFAULT_FLASH_SIZE_IN_MB             8" >> include/config.h
 	@echo "#define BOARD_CUSTOM_STRING                  \"AP83 (AR9132) U-Boot for TL-WR1043ND\"" >> include/config.h
+	@echo "#define CONFIG_GZIP                          1" >> include/config.h
 
 	@./mkconfig -a ap83 mips mips ap83 ar7100 ar7100
+	@echo "CONFIG_GZIP = 1" >> include/config.mk
 
 wr703n_config : unconfig hornet_common_config
 	@/bin/echo -e '\e[32m> Configuring for TP-Link TL-WR703N at:' `date` '\e[0m'

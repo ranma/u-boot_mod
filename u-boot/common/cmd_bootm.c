@@ -28,6 +28,7 @@
 #include <command.h>
 #include <image.h>
 #include <malloc.h>
+#include <tinf.h>
 #include <LzmaWrapper.h>
 #include <environment.h>
 #include <asm/byteorder.h>
@@ -159,12 +160,21 @@ int do_bootm(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]){
 	/*	case IH_COMP_LZMA:*/
 	puts("Uncompressing kernel image... ");
 
+#ifdef CONFIG_GZIP  /* Compatible to TL-WR1043ND factory u-boot */
+	i = tinf_gzip_uncompress((void *)ntohl(hdr->ih_load), &unc_len, (void*)data, len);
+
+	if(i != TINF_OK){
+		printf("## Error: gunzip failed: %d\n", i);
+		return(-1);
+	}
+#else
 	i = lzma_inflate((unsigned char *)data, len, (unsigned char*)ntohl(hdr->ih_load), (int *)&unc_len);
 
 	if(i != LZMA_RESULT_OK){
 		printf("## Error: LZMA error num: %d\n", i);
 		return(-1);
 	}
+#endif
 
 	puts("OK!\n");
 
