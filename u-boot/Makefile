@@ -361,7 +361,6 @@ cus97_config:	unconfig ar9100_common_config
 wr1043nd_config : unconfig ar9100_common_config
 	@/bin/echo -e '\e[32m> Configuring for TP-Link TL-WR1043ND at:' `date` '\e[0m'
 	@echo "#define CONFIG_FOR_TPLINK_WR1043ND           1" >> include/config.h
-	@echo "#define CONFIG_USE_OPENWRT_HEADER_FALLBACK   1" >> include/config.h
 	# Compressed doesn't compile yet.
 	@echo "#undef COMPRESSED_UBOOT"                        >> include/config.h
 	@echo "#define GPIO_SYS_LED_BIT                     2" >> include/config.h
