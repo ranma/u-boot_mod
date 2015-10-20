@@ -50,6 +50,8 @@ extern void eth_halt(void);
 #include <rtc.h>
 #endif
 
+#define IH_MAGIC_OKLI		0x4f4b4c49	/* 'OKLI' */
+
 /*
  *  Continue booting an OS image; caller already has:
  *  - copied image header to global variable `header'
@@ -96,7 +98,7 @@ void fake_image_header(image_header_t *hdr, tplink_image_header_t *tpl_hdr){
 #endif /* if !defined(CONFIG_FOR_8DEVICES_CARAMBOLA2) && !defined(CONFIG_FOR_DLINK_DIR505_A1) && !defined(CONFIG_FOR_DRAGINO_V2) && !defined(CONFIG_FOR_MESH_POTATO_V2) */
 
 int do_bootm(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]){
-	ulong addr, data, len;
+	ulong addr, data, ofs;
 	uint unc_len = CFG_BOOTM_LEN;
 	int i;
 	image_header_t *hdr = &header;
@@ -132,8 +134,6 @@ int do_bootm(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]){
 	data = addr + TAG_LEN;
 #endif
 
-	len = ntohl(hdr->ih_size);
-
 	/*
 	 * We have reached the point of no return: we are going to
 	 * overwrite all exception vector code, so we cannot easily
@@ -157,11 +157,27 @@ int do_bootm(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]){
 	/* XXX - this causes problems when booting from flash */
 	/* dcache_disable(); */
 #endif
+#if defined(CONFIG_USE_OPENWRT_HEADER_FALLBACK)
+	/* Look for OpenWRT header. */
+	ofs = 0;
+	while (ofs < 0x10000) {
+		hdr = (image_header_t*)(addr + ofs);
+		if (hdr->ih_magic != htonl(IH_MAGIC_OKLI)) {
+			ofs += 4;
+			continue;
+		}
+		unc_len = CFG_BOOTM_LEN;
+		data = addr + ofs + sizeof(image_header_t);
+		printf("OpenWRT header at 0x%08lX\n", hdr);
+		printf("   Image name:   %.*s\n", IH_NMLEN, hdr->ih_name);
+		break;
+	}
+#endif
 
 	/*	case IH_COMP_LZMA:*/
 	puts("Uncompressing kernel image... ");
 
-	i = lzma_inflate((unsigned char *)data, len, (unsigned char*)ntohl(hdr->ih_load), (int *)&unc_len);
+	i = lzma_inflate((unsigned char *)data, ntohl(hdr->ih_size), (unsigned char*)ntohl(hdr->ih_load), (int *)&unc_len);
 
 	if(i != LZMA_RESULT_OK){
 		printf("## Error: LZMA error num: %d\n", i);
