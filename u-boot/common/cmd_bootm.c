@@ -161,6 +161,7 @@ int do_bootm(cmd_tbl_t *cmdtp, int flag, int argc, char *argv[]){
 	puts("Uncompressing kernel image... ");
 
 #ifdef CONFIG_GZIP  /* Compatible to TL-WR1043ND factory u-boot */
+	tinf_init();
 	i = tinf_gzip_uncompress((void *)ntohl(hdr->ih_load), &unc_len, (void*)data, len);
 
 	if(i != TINF_OK){
