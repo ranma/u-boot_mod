@@ -20,7 +20,7 @@
 #define CFG_FLASH_ADDR0         (0x5555)  		
 #define CFG_FLASH_ADDR1         (0x2AAA)
 
-#define CFG_HOWL_1_2 1
+//#define CFG_HOWL_1_2 1
 
 
 /* 
