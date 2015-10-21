@@ -1,7 +1,12 @@
 export BUILD_TOPDIR=$(PWD)
 export STAGING_DIR=$(BUILD_TOPDIR)/tmp
 
-export MAKECMD=make --silent --no-print-directory ARCH=mips CROSS_COMPILE=mips-linux-gnu-
+ifndef CROSS_COMPILE
+CROSS_COMPILE = mips-linux-gnu-
+endif
+export CROSS_COMPILE
+
+export MAKECMD=make --silent --no-print-directory ARCH=mips
 
 # boot delay (time to autostart boot command)
 export CONFIG_BOOTDELAY=1
@@ -143,6 +148,16 @@ endif
 tplink_wr841n_v8:	export ETH_CONFIG=_s27
 tplink_wr841n_v8:
 	@cd $(BUILD_TOPDIR)/u-boot/ && $(MAKECMD) wr841n_v8_config
+	@cd $(BUILD_TOPDIR)/u-boot/ && $(MAKECMD) ENDIANNESS=-EB V=1 all
+	@make --no-print-directory show_size
+
+tplink_wr1043nd_v1:	export UBOOT_FILE_NAME=uboot_for_tp-link_tl-wr1043nd_v1
+tplink_wr1043nd_v1:	export CONFIG_MAX_UBOOT_SIZE_KB=123
+ifndef CONFIG_SKIP_LOWLEVEL_INIT
+tplink_wr1043nd_v1:	export COMPRESSED_UBOOT=1
+endif
+tplink_wr1043nd_v1:
+	@cd $(BUILD_TOPDIR)/u-boot/ && $(MAKECMD) wr1043nd_v1_config
 	@cd $(BUILD_TOPDIR)/u-boot/ && $(MAKECMD) ENDIANNESS=-EB V=1 all
 	@make --no-print-directory show_size
 

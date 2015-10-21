@@ -358,7 +358,7 @@ cus97_config:	unconfig ar9100_common_config
 	@echo "#define BOARD_CUSTOM_STRING                  \"CUS97 (AR9100) U-Boot\"" >> include/config.h
 	@./mkconfig -a cus97 mips mips cus97 ar7100 ar7100
 
-wr1043nd_config : unconfig ar9100_common_config
+wr1043nd_v1_config : unconfig ar9100_common_config
 	@/bin/echo -e '\e[32m> Configuring for TP-Link TL-WR1043ND at:' `date` '\e[0m'
 	@echo "#define CONFIG_FOR_TPLINK_WR1043ND           1" >> include/config.h
 	@echo "#define GPIO_SYS_LED_BIT                     2" >> include/config.h
