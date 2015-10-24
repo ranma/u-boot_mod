@@ -33,6 +33,7 @@ typedef struct {
 	ulong	size;							/* total bank size in bytes		*/
 	ulong	sector_size;					/* size of erase unit in bytes */
 	ushort	sector_count;					/* number of erase units		*/
+	unchar	sector_erase_command;				/* command for erasing a sector */
 	ulong	flash_id;						/* combined device & manufacturer code	*/
 	ulong	start[CFG_MAX_FLASH_SECT];		/* physical sector start addresses */
 } flash_info_t;

@@ -70,10 +70,17 @@ static void flash_set_geom(int size, int sector_count, int sector_size){
 	info->size = size;
 	info->sector_count = sector_count;
 	info->sector_size = sector_size;
+	info->sector_erase_command = AR7240_SPI_CMD_SECTOR_ERASE;
 
 	for(i = 0; i < info->sector_count; i++){
 		info->start[i] = CFG_FLASH_BASE + (i * info->sector_size);
 	}
+}
+
+static void flash_set_erase_command(unsigned char cmd){
+	flash_info_t *info = &flash_info[0];
+
+	info->sector_erase_command = cmd;
 }
 
 unsigned long flash_init(void){
@@ -193,7 +200,8 @@ unsigned long flash_init(void){
 			 * 16M flash chips
 			 */
 		case 0xEF4018:	// tested
-			flash_set_geom(SIZE_INBYTES_16MBYTES, 256, SIZE_INBYTES_64KBYTES);
+			flash_set_geom(SIZE_INBYTES_16MBYTES, 4096, SIZE_INBYTES_4KBYTES);
+			flash_set_erase_command(AR7240_SPI_CMD_4KSECTOR_ERASE);
 			puts("Winbond W25Q128 (16 MB)");
 			break;
 
@@ -327,8 +335,9 @@ static void ar7240_spi_write_page(uint32_t addr, uint8_t *data, int len){
 }
 
 static void ar7240_spi_sector_erase(uint32_t addr){
+	uint8_t erase_command = flash_info[0].sector_erase_command;
 	ar7240_spi_write_enable();
-	ar7240_spi_bit_banger(AR7240_SPI_CMD_SECTOR_ERASE);
+	ar7240_spi_bit_banger(erase_command);
 	ar7240_spi_send_addr(addr);
 	ar7240_spi_go();
 	ar7240_spi_poll();
