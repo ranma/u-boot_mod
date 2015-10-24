@@ -114,16 +114,11 @@
  */
 #define CFG_INIT_SP_OFFSET	0x1000
 
-
-/* changed by lqm, 17Jan08
-#define	CFG_ENV_IS_IN_FLASH    1
-#undef CFG_ENV_IS_NOWHERE  
-*/
-#undef	CFG_ENV_IS_IN_FLASH   
-#define CFG_ENV_IS_NOWHERE  	1
- 
-
-/* Address and size of Primary Environment Sector	*/
+/*
+ * Address and size of Primary Environment Sector
+ */
+#define CFG_ENV_IS_IN_FLASH    1
+#undef  CFG_ENV_IS_NOWHERE
 #define CFG_ENV_ADDR		0xBF01EC00
 #define CFG_ENV_SIZE		0x1000
 #define CFG_ENV_SECT_SIZE	0x10000
@@ -162,32 +157,20 @@
 /*-----------------------------------------------------------------------
  * Cache Configuration
  */
-#define CFG_CMD_EXCLUDE_BY_TP_LINK ((CFG_CMD_BDI | \
-			CFG_CMD_LOADS | \
-			CFG_CMD_CONSOLE | \
-			CFG_CMD_ECHO | \
-			CFG_CMD_SETGETDCR | \
-			CFG_CMD_MISC | \
-			CFG_CMD_ITEST | \
-			CFG_CMD_NFS | \
-			CFG_CMD_ENV | \
-			CFG_CMD_XIMG | \
-			CFG_CMD_AUTOSCRIPT | \
-			CFG_CMD_IMI | \
-			CFG_CMD_BOOTD | \
-			CFG_CMD_IMLS | \
-			CFG_CMD_MII \
-		))
-
-#define CONFIG_COMMANDS	( (CONFIG_CMD_DFL & ~CFG_CMD_EXCLUDE_BY_TP_LINK) | \
-				CFG_CMD_NET | CFG_CMD_FLASH | CFG_CMD_LOADB )	
-   
-#if 0
-#define CONFIG_COMMANDS	(( CONFIG_CMD_DFL | CFG_CMD_DHCP | CFG_CMD_ELF | \
-            CFG_CMD_MII | CFG_CMD_PING | CFG_CMD_NET | CFG_CMD_JFFS2 |\
-   CFG_CMD_ENV | CFG_CMD_FLASH | CFG_CMD_LOADS | CFG_CMD_RUN | CFG_CMD_LOADB \
-   | CFG_CMD_ELF ))		/* del CFG_CMD_NET, lsz 080827 */
-#endif
+#define CONFIG_COMMANDS (CFG_CMD_MEMORY | \
+						 CFG_CMD_DHCP   | \
+						 CFG_CMD_PING   | \
+						 CFG_CMD_FLASH  | \
+						 CFG_CMD_NET    | \
+						 CFG_CMD_RUN    | \
+						 CFG_CMD_DATE   | \
+						 CFG_CMD_SNTP   | \
+						 CFG_CMD_ECHO   | \
+						 CFG_CMD_BOOTD  | \
+						 CFG_CMD_ITEST  | \
+						 CFG_CMD_IMI    | \
+						 CFG_CMD_ENV    | \
+						 CFG_CMD_LOADB)
 
 #define CONFIG_IPADDR		192.168.1.1
 #define CONFIG_SERVERIP		192.168.1.2
