@@ -188,8 +188,8 @@
    | CFG_CMD_ELF ))		/* del CFG_CMD_NET, lsz 080827 */
 #endif
 
-#define CONFIG_IPADDR		192.168.0.2
-#define CONFIG_SERVERIP		192.168.0.5
+#define CONFIG_IPADDR		192.168.1.1
+#define CONFIG_SERVERIP		192.168.1.2
 #define CONFIG_ETHADDR		00:1D:0F:11:22:33 //00:00:00:00:00:00
 #define CFG_FAULT_ECHO_LINK_DOWN    1
 #define CONFIG_PHY_GIGE       1              /* GbE speed/duplex detect */
