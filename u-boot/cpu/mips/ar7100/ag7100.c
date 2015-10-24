@@ -15,6 +15,7 @@
 //#endif
 #define ag7100_unit2mac(_unit)     ag7100_macs[(_unit)]
 #define ag7100_name2mac(name)	   (strcmp(name,"eth0") ? ag7100_unit2mac(1) : ag7100_unit2mac(0))
+#define CHECK_BIT(var,pos)			((var) & (1<<(pos)))
 
 int ag7100_miiphy_read(char *devname, unsigned char phaddr,
 	       unsigned char reg, unsigned short *value);
