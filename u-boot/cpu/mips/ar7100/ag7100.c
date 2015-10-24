@@ -457,46 +457,45 @@ ag7100_mac_addr_loc(void)
 
 static void ag7100_get_ethaddr(struct eth_device *dev)
 {
-#if 0
-    int x, temp;
-    char *s, *e, buf[64];
+	unsigned char *mac = dev->enetaddr;
+#ifdef OFFSET_MAC_ADDRESS
+	unsigned char buffer[6];
 
-    temp = getenv_r("ethaddr", buf, sizeof(buf));
-    s = (temp > 0) ? buf : NULL;
+	// get MAC address from flash and check it
+	memcpy(buffer, (void *)(CFG_FLASH_BASE + OFFSET_MAC_DATA_BLOCK + OFFSET_MAC_ADDRESS), 6);
 
-    for (x = 0; x < 6; ++x) {
-        dev->enetaddr[x] = s ? simple_strtoul(s, &e, 16) : 0;
-        if (s)
-            s = (*e) ? e + 1 : e;
-    }
+	/*
+	 * check first LSBit (I/G bit) and second LSBit (U/L bit) in MSByte of vendor part
+	 * both of them should be 0:
+	 * I/G bit == 0 -> Individual MAC address (unicast address)
+	 * U/L bit == 0 -> Burned-In-Address (BIA) MAC address
+	 */
+	if(CHECK_BIT((buffer[0] & 0xFF), 0) == 0 && CHECK_BIT((buffer[0] & 0xFF), 1) == 0){
+		mac[0] = (buffer[0] & 0xFF);
+		mac[1] = (buffer[1] & 0xFF);
+		mac[2] = (buffer[2] & 0xFF);
+		mac[3] = (buffer[3] & 0xFF);
+		mac[4] = (buffer[4] & 0xFF);
+		mac[5] = (buffer[5] & 0xFF);
+	} else {
+		// 00-03-7F (Atheros Communications, Inc.)
+		mac[0] = 0x00;
+		mac[1] = 0x03;
+		mac[2] = 0x7f;
+		mac[3] = 0x09;
+		mac[4] = 0x0b;
+		mac[5] = 0xad;
+
+		printf("## Error: MAC address in FLASH is invalid, using fixed!\n");
+	}
 #else
-    unsigned char *eeprom;
-    unsigned char *mac = dev->enetaddr;
-
-    eeprom = ag7100_mac_addr_loc();
-
-    if (strcmp(dev->name, "eth0") == 0) {
-        memcpy(mac, eeprom, 6);
-    } else if (strcmp(dev->name, "eth1") == 0) {
-        eeprom += 6;
-        memcpy(mac, eeprom, 6);
-    } else {
-        printf("%s: unknown ethernet device %s\n", __func__, dev->name);
-        return;
-    }
-
-    /* Use fixed address if the above address is invalid */
-    if (mac[0] == 0xff && mac[5] == 0xff) {
-        mac[0] = 0x00;
-        mac[1] = 0x03;
-        mac[2] = 0x7f;
-        mac[3] = 0x09;
-        mac[4] = 0x0b;
-        mac[5] = 0xad;
-        printf("No valid address in Flash. Using fixed address\n");
-    } else {
-        printf("Fetching MAC Address from 0x%p\n", __func__, eeprom);
-    }
+	// 00-03-7F (Atheros Communications, Inc.)
+	mac[0] = 0x00;
+	mac[1] = 0x03;
+	mac[2] = 0x7f;
+	mac[3] = 0x09;
+	mac[4] = 0x0b;
+	mac[5] = 0xad;
 #endif
 }
 
