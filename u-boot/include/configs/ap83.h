@@ -124,8 +124,9 @@
  
 
 /* Address and size of Primary Environment Sector	*/
-#define CFG_ENV_ADDR		0xbf040000
-#define CFG_ENV_SIZE		0x20000
+#define CFG_ENV_ADDR		0xBF01EC00
+#define CFG_ENV_SIZE		0x1000
+#define CFG_ENV_SECT_SIZE	0x10000
 
 //#define CONFIG_BOOTCOMMAND "bootm 0xbf020000" // by lsz 17Nov08 "bootm 0xbf460000"
 //#define CONFIG_FLASH_16BIT
