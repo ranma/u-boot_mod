@@ -99,6 +99,9 @@
 #endif
 #define CFG_HZ_FALLBACK CFG_HZ
 
+#define AR7240_SPI_CONTROL_DEFAULT	0x43
+#define AR7240_SPI_CONTROL	AR7240_SPI_CONTROL_DEFAULT
+
 
 /* 
  * timeout values are in ticks 
